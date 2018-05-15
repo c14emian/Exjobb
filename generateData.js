@@ -82,18 +82,19 @@ setTimeout(function () {
 			}, 500)
 }
 
-function storeTime(insertTime){
+function storeTime(searchTime){
   $.ajax({
     type: "POST",
-    url: "writeInsertTime.php",
+    url: "writeTime.php",
     cache: false,
     data: {
-      insertTime: insertTime,
+      storeTime: searchTime,
       dbType: db,
-      test: numOfData
+      searches: $("#dataAmount").val(),
+      storeType: "insert"
     },
     success: function(data){
-      console.log("Insert time: " + data + "ms stored.");
+      console.log("Search time: " + data + "ms stored.");
     },
     error: function(exception){
       console.log(exception.responseText);

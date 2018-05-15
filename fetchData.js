@@ -19,13 +19,47 @@ $(document).ready(function() {
 
   // Function for fetching data
   $("#ajaxButton").click(function() {
+    var counter = 0;
+    getSearchValue(counter);
+  });
 
-    var startTime = (new Date).getTime();
+function getSearchValue(counter){
+  var searchArray = [
+      "Barracuda",
+      "Manta Ray",
+      "Leopard Shark",
+      "Moray Eel",
+      "Clownfish",
+      "Black Tip Reef Shark",
+      "Leopard Shark",
+      "Parrot Fish",
+      "Eagle Ray",
+      "Dolphin",
+      "Tuna"
+      ];
 
-    $.ajax({
+      var noOfSearches = $("#dataAmount").val();
+      if(counter < noOfSearches){
+        setTimeout(function(){
+            var searchValue = searchArray[Math.floor(Math.random() * searchArray.length)];
+            console.log(searchValue);
+            searchData(searchValue);
+            counter++;;
+            console.log("Counter = " + counter);
+            getSearchValue(counter);
+        }, 500);
+    }
+    else{
+        console.log("Finished searching");
+    }
+}
+
+function searchData(value){
+  var startTime = (new Date).getTime();
+  $.ajax({
       type: "POST",
       url: activeURL,
-      data: {searchData : $("#searchField").val()},
+      data: {searchData : value},
       dataType: "json",
       success: function(data) {
         var obj = data;      
@@ -65,16 +99,18 @@ $(document).ready(function() {
        console.log("ERROR " + exception.responseText);
      }
    }); 
-  });
+}
 
 function storeTime(searchTime){
   $.ajax({
     type: "POST",
-    url: "writeSearchTime.php",
+    url: "writeTime.php",
     cache: false,
     data: {
       storeTime: searchTime,
-      dbType: db
+      dbType: db,
+      searches: $("#dataAmount").val(),
+      storeType: "search"
     },
     success: function(data){
       console.log("Search time: " + data + "ms stored.");
