@@ -1,0 +1,37 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script language="javascript" type="text/javascript" src="fetchData.js"></script>
+	<script language="javascript" type="text/javascript" src="generateData.js"></script>
+</head>
+<body>
+	<nav id="mainMenu">
+		<ul>
+			<li><a href="#">Search</a></li>
+			<li><a href="#" id="switchDB">Switch Database</a></li>
+		</ul>
+	</nav>
+	<div id="tableDiv">
+		<table id="diveTable">
+			<thead>
+				<th>Date</th>
+				<th>Location</th>
+				<th>Depth</th>
+				<th>Dive Time</th>
+				<th>Sighting</th>
+				<th>Pressure Start</th>
+				<th>Pressure End</th>
+			</thead>
+			<tbody id="diveBody">
+			</tbody>
+		</table>
+	</div>
+	<input type="text" id="searchField">
+	<input type="button" value="Click Here" id="ajaxButton"/>
+	<input type="button" value="Start search" id="searchButton"/>
+	<input type="button" value="Generate Test" id="generateButton"/>
+	<div id="result"></div>
+</body>
+</html>
