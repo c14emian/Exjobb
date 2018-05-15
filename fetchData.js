@@ -19,6 +19,7 @@ $(document).ready(function() {
 
   // Function for fetching data
   $("#ajaxButton").click(function() {
+    clearFile();
     var counter = 0;
     getSearchValue(counter);
   });
@@ -123,3 +124,21 @@ function storeTime(searchTime){
 
 });
 
+function clearFile(){
+  $.ajax({
+    type: "POST",
+    url: "clearFile.php",
+    cache: false,
+    data: {
+      dbType: db,
+      searches: $("#dataAmount").val(),
+      storeType: "insert"
+    },
+    success: function(data){
+      console.log("File cleared!");
+    },
+    error: function(exception){
+      console.log(exception.responseText);
+    }
+  })
+}

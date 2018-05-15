@@ -1,11 +1,6 @@
-var dives = [];
-var id = 0;
-var allDives = [];
-var allSights = [];
 var db = "";
 var activeURL = "";
-var loop = 0;
-var numOfData = 100;
+
 $(document).ready(function() {
 
 	// Set mysql as standard database
@@ -45,15 +40,19 @@ $(document).ready(function() {
 		}
 
 		$("#generateButton").click(function() {
-			console.log("HEJ");
+			clearFile();
 			generateData();
 		});
 
 		
 
 });
+var dives = [];
+var allDives = [];
+var id = 0;
+var loop = 0;
 function generateData(){
-if(loop > numOfData){loop = 0;}
+if(loop > $("#dataAmount").val()){loop = 0;}
 setTimeout(function () {
 				id++;
 				allDives = randomValues();
@@ -72,34 +71,14 @@ setTimeout(function () {
 				}
 				var sights = [id, sightings];
 				//allSights.push($sights);
-				insertMySQL(allDives, sights);
+				insertData(allDives, sights);
 
 				console.log(loop);
 				loop++;
-				if(loop < numOfData){
+				if(loop < $("#dataAmount").val()){
 					generateData();
 				}
 			}, 500)
-}
-
-function storeTime(searchTime){
-  $.ajax({
-    type: "POST",
-    url: "writeTime.php",
-    cache: false,
-    data: {
-      storeTime: searchTime,
-      dbType: db,
-      searches: $("#dataAmount").val(),
-      storeType: "insert"
-    },
-    success: function(data){
-      console.log("Search time: " + data + "ms stored.");
-    },
-    error: function(exception){
-      console.log(exception.responseText);
-    }
-  })
 }
 
 function randomDate(start, end) {
@@ -160,7 +139,7 @@ function randomDate(start, end) {
 			return (dives);
 		}
 
-function insertMySQL(dives, sightings){
+function insertData(dives, sightings){
 
 			var startTime = (new Date).getTime();
 
@@ -181,3 +160,41 @@ function insertMySQL(dives, sightings){
     			}
 			})
 		}
+function storeTime(searchTime){
+  $.ajax({
+    type: "POST",
+    url: "writeTime.php",
+    cache: false,
+    data: {
+      storeTime: searchTime,
+      dbType: db,
+      searches: $("#dataAmount").val(),
+      storeType: "insert"
+    },
+    success: function(data){
+      console.log("Search time: " + data + "ms stored.");
+    },
+    error: function(exception){
+      console.log(exception.responseText);
+    }
+  })
+}
+
+function clearFile(){
+  $.ajax({
+    type: "POST",
+    url: "clearFile.php",
+    cache: false,
+    data: {
+      dbType: db,
+      searches: $("#dataAmount").val(),
+      storeType: "insert"
+    },
+    success: function(data){
+      console.log("File cleared!");
+    },
+    error: function(exception){
+      console.log(exception.responseText);
+    }
+  })
+}
