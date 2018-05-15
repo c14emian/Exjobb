@@ -22,7 +22,11 @@ $(document).ready(function() {
     alert('changed database to ' + db + '!');
   });
 
-		
+$("#generateButton").click(function() {
+			resetDB();
+			clearFile();
+			generateData();
+		});
 
 		function createTable(myArray) {
   		var table = document.getElementById("diveTable").getElementsByTagName('tbody')[0];
@@ -38,11 +42,6 @@ $(document).ready(function() {
   			}
   		}
 		}
-
-		$("#generateButton").click(function() {
-			clearFile();
-			generateData();
-		});
 
 		
 
@@ -191,7 +190,24 @@ function clearFile(){
       storeType: "insert"
     },
     success: function(data){
-      console.log("File cleared!");
+      console.log(data);
+    },
+    error: function(exception){
+      console.log(exception.responseText);
+    }
+  })
+}
+
+function resetDB(){
+  $.ajax({
+    type: "POST",
+    url: "resetDB.php",
+    cache: false,
+    data: {
+      dbType: db,
+    },
+    success: function(data){
+      console.log(data);
     },
     error: function(exception){
       console.log(exception.responseText);
