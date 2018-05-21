@@ -1,5 +1,7 @@
 <?php
 $currDB = $_POST['dbType'];
+$searches = $_POST['searches'];
+$storeType = $_POST['storeType'];
 
 if($currDB == 'mysql'){
 	try{
@@ -20,4 +22,13 @@ elseif($currDB == 'mongodb'){
 	$db = $m->ExjobbDB->dive;
 	$db->drop();
 }
+
+$file = $currDB . "-" . $storeType . "-" . $searches . ".txt";
+
+$content = file_get_contents($file);
+
+$content = "";
+file_put_contents($file, $content);
+
+echo $file;
 ?>

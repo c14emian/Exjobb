@@ -39,11 +39,10 @@ function getSearchValue(counter){
       "Tuna"
       ];
 
-      var noOfSearches = $("#dataAmount").val();
-      if(counter < noOfSearches){
+      
+      if(counter < 100){
         setTimeout(function(){
             var searchValue = searchArray[Math.floor(Math.random() * searchArray.length)];
-            console.log(searchValue);
             searchData(searchValue);
             counter++;;
             console.log("Counter = " + counter);
@@ -132,7 +131,7 @@ function clearFile(){
     data: {
       dbType: db,
       searches: $("#dataAmount").val(),
-      storeType: "insert"
+      storeType: "search"
     },
     success: function(data){
       console.log("File cleared!");
