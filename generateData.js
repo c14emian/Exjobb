@@ -1,60 +1,39 @@
-var db = "";
-var activeURL = "";
+// Clear databases and textfiles
+function prepareInsert(){
+	var loop = 0;
+	$.ajax({
+		type: "POST",
+		url: "resetDB.php",
+		cache: false,
+		data: {
+			dbType: db,
+			searches: $("#dataAmount").val(),
+			storeType: "insert"
+		},
+		success: function(data){
+			console.log(data);
+			generateData(loop);
+		},
+		error: function(exception){
+			console.log(exception.responseText);
+		}
+	})
+}
 
-$(document).ready(function() {
-
-	// Set mysql as standard database
-	db = 'mysql';
-	activeURL = 'insertMySQL.php';
-
-  // Function for changing database
-  $("#switchDB").click(function(){
-  	if(db == 'mysql'){
-  		db = 'mongodb';
-  		activeURL = 'insertMongo.php';
-  		console.log(db);
-  	}
-  	else if(db == 'mongodb'){
-  		db = 'mysql';
-  		activeURL = 'insertMySQL.php';
-  		console.log(db);
-  	}
-  	alert('changed database to ' + db + '!');
-  });
-
-  $("#generateButton").click(function() {
-  	prepareInsert();
-  	generateData();
-  });
-
-  function createTable(myArray) {
-  	var table = document.getElementById("diveTable").getElementsByTagName('tbody')[0];
-  	var array = myArray;
-  	for (var i = 0; i < array.length; i++){
-  		var row = table.insertRow(i);
-  		var numValues = Object.keys(array[i]).length;
-  		var cells = [];
-  		for(var j = 0; j < numValues; j++){
-  			var value = Object.keys(array[i])[j];
-  			cells[j] = row.insertCell(j);
-  			cells[j].innerHTML = array[i][value];
-  		}
-  	}
-  }
-
-
-
-});
-var dives = [];
-var allDives = [];
-var id = 0;
-var loop = 0;
+// Function to generate data
 function generateData(){
-	if(loop >= $("#dataAmount").val()){loop = 0;}
-	setTimeout(function () {
-		id++;
-		allDives = randomValues();
+	var counter = 0;
+	var id = 0;
+	var dives = [];
+	var allDives = [];
 
+	// Interval loops until close with 700ms delay
+	var loop = setInterval(function () {
+		id++;
+
+		allDives = randomValues();	// Generate diveLog data
+
+		// Generate sightings
 		var sightings = [];
 		var numOfSightings = Math.floor((Math.random() * 4) + 4)
 		for(var i = 0; i<numOfSightings; i++){
@@ -68,16 +47,60 @@ function generateData(){
 
 		}
 		var sights = [id, sightings];
-				//allSights.push($sights);
-				insertData(allDives, sights);
 
-				console.log(loop);
-				loop++;
-				if(loop < $("#dataAmount").val()){
-					generateData();
-				}
-			}, 500)
+		insertData(allDives, sights); 
+
+		console.log(counter);
+		counter++;
+		if(counter > 99){ clearInterval(loop);}
+
+	}, 700)
 }
+
+// Function for calling PHP-Insertion
+function insertData(dives, sightings){
+	var startTime = (new Date).getTime();
+
+	JSON.stringify(dives);
+	$.ajax({
+		type: "POST",
+		url: activeURL,
+		cache: false,
+		data: {
+			diveData : dives,
+			sightData: sightings},
+			success: function(data){
+				var diffTime = (new Date).getTime() - startTime;
+				storeTime(diffTime);
+			},
+			error: function(exception){
+				console.log(exception.responseText);
+			}
+		})
+}
+
+// Function for storing time
+function storeTime(searchTime){
+	$.ajax({
+		type: "POST",
+		url: "writeTime.php",
+		cache: false,
+		data: {
+			storeTime: searchTime,
+			dbType: db,
+			searches: $("#dataAmount").val(),
+			storeType: "insert"
+		},
+		success: function(data){
+			console.log("Search time: " + data + "ms stored.");
+		},
+		error: function(exception){
+			console.log(exception.responseText);
+		}
+	})
+}
+
+// Functions for generating data
 
 function randomDate(start, end) {
 	var d = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
@@ -135,64 +158,4 @@ function randomValues(){
 
 	dives = [date, diveLocation, depth, diveTime, pressStart, pressEnd];
 	return (dives);
-}
-
-function insertData(dives, sightings){
-
-	var startTime = (new Date).getTime();
-
-	JSON.stringify(dives);
-	$.ajax({
-		type: "POST",
-		url: activeURL,
-		cache: false,
-		data: {
-			diveData : dives,
-			sightData: sightings},
-			success: function(data){
-				var diffTime = (new Date).getTime() - startTime;
-				storeTime(diffTime);
-			},
-			error: function(exception){
-				console.log(exception.responseText);
-			}
-		})
-}
-function storeTime(searchTime){
-	$.ajax({
-		type: "POST",
-		url: "writeTime.php",
-		cache: false,
-		data: {
-			storeTime: searchTime,
-			dbType: db,
-			searches: $("#dataAmount").val(),
-			storeType: "insert"
-		},
-		success: function(data){
-			console.log("Search time: " + data + "ms stored.");
-		},
-		error: function(exception){
-			console.log(exception.responseText);
-		}
-	})
-}
-
-function prepareInsert(){
-	$.ajax({
-		type: "POST",
-		url: "resetDB.php",
-		cache: false,
-		data: {
-			dbType: db,
-			searches: $("#dataAmount").val(),
-			storeType: "insert"
-		},
-		success: function(data){
-			console.log(data);
-		},
-		error: function(exception){
-			console.log(exception.responseText);
-		}
-	})
 }
