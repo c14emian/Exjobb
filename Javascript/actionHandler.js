@@ -24,7 +24,7 @@ $(document).ready(function() {
     if(db == 'mysql'){
       activeURL = 'insertMySQL.php';
     }
-    else if(db == mongodb){
+    else if(db == 'mongodb'){
       activeURL = 'insertMongo.php';
     }
   	prepareInsert();
@@ -35,7 +35,7 @@ $(document).ready(function() {
     if(db == 'mysql'){
       activeURL = 'fetchMySQL.php';
     }
-    else if(db == mongodb){
+    else if(db == 'mongodb'){
       activeURL = 'fetchMongo.php';
     }
     searchType = 'sight';
@@ -46,7 +46,7 @@ $(document).ready(function() {
     if(db == 'mysql'){
       activeURL = 'fetchMySQL.php';
     }
-    else if(db == mongodb){
+    else if(db == 'mongodb'){
       activeURL = 'fetchMongo.php';
     }
     searchType = 'location';

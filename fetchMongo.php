@@ -6,11 +6,11 @@ $db = $m->ExjobbDB->dive;
 $searchVal = $_POST['searchData'];
 $searchType = $_POST['searchType'];
 
-if($searchType == 'animals'){
+if($searchType == 'sight'){
 	$searchQuery = array('Sightings' => $searchVal);
 	$result = $db->find($searchQuery);
 }
-else if($searchType == 'dives'){
+else if($searchType == 'location'){
 	$searchQuery = array('Location' => $searchVal);
 	$result = $db->find($searchQuery);
 }
